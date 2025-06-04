@@ -1,44 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IGDTUW CGPA Calculator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IGDTUW CGPA Calculator</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>IGDTUW CGPA Calculator</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Marks</th>
-                    <th>Credits</th>
-                    <th>Grade Point</th> <!-- Updated -->
-                    <th>Grade</th> <!-- Updated -->
-                </tr>
-            </thead>
-            <tbody id="subjects">
-                <tr>
-                    <td>Subject 1</td>
-                    <td><input type="number" class="marks" min="0" max="100"></td>
-                    <td><input type="number" class="credits" min="1" max="5"></td>
-                    <td class="grade-point"></td>
-                    <td class="grade"></td>
-                </tr>
-            </tbody>
-        </table>        
-        <div class="actions">
-            <div class="subject-control">
-                <button class="icon-button" onclick="addRow()">+</button>
-                <span>Subject</span>
-                <button class="icon-button" onclick="removeLastRow()">-</button>
-            </div>
-            <button class="calculate-button" onclick="calculateCGPA()">Calculate</button>
-        </div>
-        <div class="result" id="result"></div>
-    </div>
-    <script src="script.js"></script>
+  <header class="top-bar">
+    <h1>Indira Gandhi Delhi Technical University for Women</h1>
+  </header>
+
+  <main class="container">
+    <!-- Section 1: Subject-based CGPA Calculator -->
+    <section>
+      <h2>Semester CGPA Calculator </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Credits</th>
+            <th>Grade Point</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody id="subjects">
+          <tr>
+            <td>Subject 1</td>
+            <td><input type="number" class="marks" min="0" max="100" /></td>
+            <td><input type="number" class="credits" min="1" max="5" /></td>
+            <td class="grade-point"></td>
+            <td class="grade"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="actions">
+        <button onclick="addRow()"> Add Subject</button>
+        <button onclick="removeLastRow()">Remove Subject</button>
+        <button onclick="calculateCGPA()"> Calculate</button>
+      </div>
+      <div class="result" id="result"></div>
+    </section>
+
+    <!-- Section 2: Cumulative CGPA Calculator -->
+    <section>
+      <h2>Cumulative CGPA Calculator </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Semester</th>
+            <th>GPA</th>
+            <th>Credits</th>
+          </tr>
+        </thead>
+        <tbody id="semesters">
+          <tr>
+            <td>Semester 1</td>
+            <td><input type="number" class="sem-gpa" min="1" max="10" step="0.01"/></td>
+            <td><input type="number" class="sem-credits" min="1" max="30"/></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="actions">
+        <button onclick="addSemester()"> Add Semester</button>
+        <button onclick="removeSemester()"> Remove Semester</button>
+        <button onclick="calculateCumulativeCGPA()"> Calculate Cumulative CGPA</button>
+      </div>
+      <div class="result" id="cumulative-result"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
