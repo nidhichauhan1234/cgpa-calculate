@@ -1,4 +1,3 @@
-// ---------------- Subject-Based CGPA Calculator ----------------
 
 function addRow() {
     const tbody = document.getElementById('subjects');
@@ -6,12 +5,13 @@ function addRow() {
     row.innerHTML = `
         <td>Subject ${tbody.children.length + 1}</td>
         <td><input type="number" class="marks" min="0" max="100"></td>
-        <td><input type="number" class="credits" min="1" max="5"></td>
+        <td><input type="number" class="credits" min="18" max="23"></td>
         <td class="grade-point"></td>
         <td class="grade"></td>
     `;
     tbody.appendChild(row);
 }
+
 
 function removeLastRow() {
     const tbody = document.getElementById('subjects');
@@ -23,12 +23,14 @@ function removeLastRow() {
     updateSubjectNumbers();
 }
 
+
 function updateSubjectNumbers() {
     const rows = document.querySelectorAll('#subjects tr');
     rows.forEach((row, index) => {
         row.cells[0].textContent = `Subject ${index + 1}`;
     });
 }
+
 
 function calculateGrade(marks) {
     if (marks >= 93) return 'A+';
@@ -41,6 +43,7 @@ function calculateGrade(marks) {
     return 'F';
 }
 
+
 function calculateGradePoint(grade) {
     switch (grade) {
         case 'A+': return 10;
@@ -51,8 +54,10 @@ function calculateGradePoint(grade) {
         case 'C': return 5;
         case 'D': return 4;
         case 'F': return 0;
+        default: return 0;
     }
 }
+
 
 function calculateCGPA() {
     const marksInputs = document.querySelectorAll('.marks');
@@ -68,6 +73,14 @@ function calculateCGPA() {
         const credits = parseFloat(creditsInputs[index].value);
 
         if (isNaN(marks) || isNaN(credits)) return;
+        if (marks < 0 || marks > 100) {
+            alert(`Invalid marks in Subject ${index + 1}. Enter between 0–100.`);
+            return;
+        }
+        if (credits < 18 || credits > 23) {
+            alert(`Invalid credits in Subject ${index + 1}. Enter between 18–23.`);
+            return;
+        }
 
         const grade = calculateGrade(marks);
         const gradePoint = calculateGradePoint(grade);
@@ -79,11 +92,9 @@ function calculateCGPA() {
         weightedPoints += gradePoint * credits;
     });
 
-    const cgpa = totalCredits ? (weightedPoints / totalCredits).toFixed(2) : 0.00;
-    document.getElementById('result').textContent = `Your Semester CGPA is: ${cgpa}`;
+    const gpa = totalCredits ? (weightedPoints / totalCredits).toFixed(2) : 0.00;
+    document.getElementById('result').textContent = `Your Semester GPA is: ${gpa}`;
 }
-
-// ---------------- Cumulative CGPA Calculator ----------------
 
 function addSemester() {
     const tbody = document.getElementById('semesters');
@@ -98,10 +109,11 @@ function addSemester() {
     row.innerHTML = `
         <td>Semester ${count + 1}</td>
         <td><input type="number" class="sem-gpa" min="1" max="10" step="0.01"></td>
-        <td><input type="number" class="sem-credits" min="1" max="30"></td>
+        <td><input type="number" class="sem-credits" min="18" max="23"></td>
     `;
     tbody.appendChild(row);
 }
+
 
 function removeSemester() {
     const tbody = document.getElementById('semesters');
@@ -131,16 +143,75 @@ function calculateCumulativeCGPA() {
         const gpa = parseFloat(input.value);
         const credit = parseFloat(credits[index].value);
 
-        if (
-            isNaN(gpa) || isNaN(credit) ||
-            gpa < 1 || gpa > 10 ||
-            credit <= 0
-        ) return;
+        if (isNaN(gpa) || isNaN(credit)) return;
+        if (gpa < 0 || gpa > 10) {
+            alert(`Invalid GPA in Semester ${index + 1}. Enter between 0–10.`);
+            return;
+        }
+        if (credit < 18 || credit > 23) {
+            alert(`Invalid credits in Semester ${index + 1}. Enter between 18–23.`);
+            return;
+        }
 
         totalCredits += credit;
         totalWeightedGPA += gpa * credit;
     });
-const cumulative = totalCredits ? (totalWeightedGPA / totalCredits) : 0.00;
-
-    document.getElementById('cumulative-result').textContent = `Your Cumulative CGPA is: ${cumulative}`;
+    const cgpa = totalCredits ? (totalWeightedGPA / totalCredits) : 0.00;
+    document.getElementById('cumulative-result').textContent = `Your Semester CGPA is: ${cgpa}`;
 }
+// dynamic GPA input fields
+document.getElementById('completedSems').addEventListener('input', function() {
+    const count = parseInt(this.value) || 0;
+    const container = document.getElementById('gpaInputs');
+    container.innerHTML = "";
+    for (let i = 1; i <= count; i++) {
+        container.innerHTML += `
+            <div>
+              <label>Semester ${i} GPA: <input type="number" step="0.01" class="gpa"></label>
+              <label>Credits: <input type="number" class="semCredits"></label>
+            </div>
+        `;
+    }
+});
+
+function predictCgpa() {
+    const totalSems = parseInt(document.getElementById('totalSems').value);
+    const completedSems = parseInt(document.getElementById('completedSems').value);
+    const targetCgpa = parseFloat(document.getElementById('targetCgpa').value);
+
+    const gpaInputs = document.querySelectorAll('.gpa');
+    const creditInputs = document.querySelectorAll('.semCredits');
+
+    let currentPoints = 0, currentCredits = 0;
+    gpaInputs.forEach((input, idx) => {
+        const gpa = parseFloat(input.value);
+        const credits = parseFloat(creditInputs[idx].value);
+        if (!isNaN(gpa) && !isNaN(credits)) {
+            currentPoints += gpa * credits;
+            currentCredits += credits;
+        }
+    });
+
+    const avgCredits = currentCredits / completedSems; // assume future sem credits same avg
+    const totalCredits = avgCredits * totalSems;
+    const requiredTotalPoints = targetCgpa * totalCredits;
+    const remainingPoints = requiredTotalPoints - currentPoints;
+    const remainingCredits = totalCredits - currentCredits;
+
+    let result = "";
+    if (remainingCredits <= 0) {
+        result = "All semesters completed!";
+    } else {
+        const requiredGpa = remainingPoints / remainingCredits;
+        if (requiredGpa > 10) {
+            result = `⚠️ Target CGPA not achievable.`;
+        } else if (requiredGpa < 0) {
+            result = `You already crossed the target CGPA 🎉`;
+        } else {
+            result = `To achieve CGPA ${targetCgpa}, you need an average GPA of <b>${requiredGpa}</b> in remaining semesters.`;
+        }
+    }
+
+    document.getElementById('predictResult').innerHTML = result;
+}
+

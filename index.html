@@ -8,13 +8,13 @@
 </head>
 <body>
   <header class="top-bar">
-    <h1>Indira Gandhi Delhi Technical University for Women</h1>
+    <h1>IGDTUW CGPA & GPA Calculator</h1>
   </header>
 
   <main class="container">
-    <!-- Section 1: Subject-based CGPA Calculator -->
-    <section>
-      <h2>Semester CGPA Calculator </h2>
+  
+    <section class="card gpa-card">
+      <h2>Semester GPA Calculator</h2>
       <table>
         <thead>
           <tr>
@@ -36,16 +36,15 @@
         </tbody>
       </table>
       <div class="actions">
-        <button onclick="addRow()"> Add Subject</button>
+        <button onclick="addRow()">Add Subject</button>
         <button onclick="removeLastRow()">Remove Subject</button>
-        <button onclick="calculateCGPA()"> Calculate</button>
+        <button class="calculate" onclick="calculateCGPA()">Calculate GPA</button>
       </div>
-      <div class="result" id="result"></div>
+      <div class="result" id="result">Your Semester GPA will appear here</div>
     </section>
 
-    <!-- Section 2: Cumulative CGPA Calculator -->
-    <section>
-      <h2>Cumulative CGPA Calculator </h2>
+    <section class="card cgpa-card">
+      <h2>Cumulative CGPA Calculator</h2>
       <table>
         <thead>
           <tr>
@@ -63,12 +62,26 @@
         </tbody>
       </table>
       <div class="actions">
-        <button onclick="addSemester()"> Add Semester</button>
-        <button onclick="removeSemester()"> Remove Semester</button>
-        <button onclick="calculateCumulativeCGPA()"> Calculate Cumulative CGPA</button>
+        <button onclick="addSemester()">Add Semester</button>
+        <button onclick="removeSemester()">Remove Semester</button>
+        <button class="calculate" onclick="calculateCumulativeCGPA()">Calculate CGPA</button>
       </div>
-      <div class="result" id="cumulative-result"></div>
+      <div class="result" id="cumulative-result">Your Cumulative CGPA will appear here</div>
     </section>
+
+    <div class="card">
+  <h2 id="Predictor">CGPA Predictor</h2>
+  <label>Total Semesters: <input type="number" id="totalSems" min="1" max="12"></label>
+  <label>Completed Semesters: <input type="number" id="completedSems" min="1" max="12"></label>
+  
+  <div id="gpaInputs"></div>
+  
+  <label>Target CGPA: <input type="number" id="targetCgpa" step="0.01" min="0" max="10"></label>
+  <button onclick="predictCgpa()">Predict</button>
+  
+  <div id="predictResult"></div>
+</div>
+
   </main>
 
   <script src="script.js"></script>
